@@ -196,7 +196,7 @@ const LogIn = () => {
                                             </div>
                                             <center className='margin-bottom-ReCAPTCHA'><ReCAPTCHA /* ReCAPTCHA component */
 
-                                                sitekey="6Le9migkAAAAAHAzyMzJLLRN5b4LZPYOsbqjzE4J"
+                                                sitekey="6Ldl7SgkAAAAAE5cnJEzClnwxZ5K5HfZ87612ZoM"
                                                 ref={captchaRef}
                                                 onChange={onChangeRecap}
                                             /></center>

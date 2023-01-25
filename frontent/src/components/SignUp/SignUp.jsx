@@ -65,6 +65,7 @@ const SignUp = () => {
 
             return;
         }
+
         /* get the token from the reCAPTCHA */
         // const token = captchaRef.current.getValue();
         // captchaRef.current.reset();
@@ -80,7 +81,7 @@ const SignUp = () => {
         //         })
         // };
         
-        console.log("requesting");
+        // console.log("requesting");
 
         // const reCaptchaResponse = await fetch('/reCaptchaValidation', reCAPTCHMsg) /* send the token to the server to validate it */
         // console.log(reCaptchaResponse);

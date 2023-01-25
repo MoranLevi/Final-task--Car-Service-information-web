@@ -63,9 +63,9 @@ const LogIn = () => {
         navigate('/dashboard');
     };
     
-    // const onChangeRecap=(value)=> {
-    //     setReCAPTCHAValue(value);
-    // }
+    const onChangeRecap=(value)=> {
+        setReCAPTCHAValue(value);
+    }
 
     /* define useForm for the logIn form */
     const { register, handleSubmit, formState: { errors }} = useForm({
@@ -86,8 +86,7 @@ const LogIn = () => {
         if(reCAPTCHAValue===0){
             setStatus("ReCAPTCHA verification failed");
             setMsgModal('ReCAPTCHA verification failed')
-           handleShow()
-
+            handleShow()
             return;
         }
         
@@ -198,7 +197,7 @@ const LogIn = () => {
 
                                                 sitekey="6Ldl7SgkAAAAAE5cnJEzClnwxZ5K5HfZ87612ZoM"
                                                 ref={captchaRef}
-                                                // onChange={onChangeRecap}
+                                                onChange={onChangeRecap}
                                             /></center>
                                             <input type="submit" className="btn btn-primary btn-user btn-block" value={'Login'}></input>
                                             <hr/>

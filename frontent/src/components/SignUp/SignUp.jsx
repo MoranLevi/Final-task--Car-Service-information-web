@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef,useState } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { signUpSchema } from 'Validations/FormsValidation';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -9,23 +9,44 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './SignUp.css';
 import '../../css/sb-admin-2.css';
 
+import Popup from 'reactjs-popup';
+import { Modal, Button } from "react-bootstrap";
+
 /* SignUp Component */
 const SignUp = () => {
 
     const navigate = useNavigate(); /* define hook to navigate to other pages */
-
+    const [showModal, setShow] = useState(false);/*define state for the modal box */
+    const [msgModal, setMsgModal] = useState('');/*define state for the message modal box */
+    const [reCAPTCHAValue, setReCAPTCHAValue] = useState(0);
     const captchaRef = useRef(null); /* define ref for the reCAPTCHA */
     
+
+    /* function that close the modal and reset the message modal*/
+    const handleClose = () =>{
+        setShow(false);
+        setMsgModal('');
+   }
+   /* function that open the modal and displays it*/
+   const handleShow = () =>{
+       setShow(true);
+   }
+
     /* function that navigates to the home page */
     const handleClickHome = () => {
         navigate('/');
     };
+
 
     /* function that navigates to the log in page */
     const handleClickLogIn = () => {
         navigate('/logIn');
     };
     
+    const onChangeRecap=(value)=> {
+        setReCAPTCHAValue(value);
+    }
+
     /* define useForm for the signUp form */
     const { register, handleSubmit, formState: { errors }} = useForm({
         resolver: yupResolver(signUpSchema), /* validate the form with the schema */
@@ -36,29 +57,37 @@ const SignUp = () => {
     const submitForm = async (data, e) => {
         e.preventDefault();
 
+        if(reCAPTCHAValue===0){
+            setStatus("ReCAPTCHA verification failed");
+            setMsgModal('ReCAPTCHA verification failed')
+           handleShow()
+
+            return;
+        }
         /* get the token from the reCAPTCHA */
-        const token = captchaRef.current.getValue();
-        captchaRef.current.reset();
+        // const token = captchaRef.current.getValue();
+        // captchaRef.current.reset();
 
         /* define the recaptch request message */
-        const reCAPTCHMsg = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(
-                {
-                    title:     'reCAPTCHA',
-                    token:     token
-                })
-        };
+        // const reCAPTCHMsg = {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify(
+        //         {
+        //             title:     'reCAPTCHA',
+        //             token:     token
+        //         })
+        // };
         
         console.log("requesting");
 
-        const reCaptchaResponse = await fetch('/reCaptchaValidation', reCAPTCHMsg) /* send the token to the server to validate it */
-        console.log(reCaptchaResponse);
-        if (!reCaptchaResponse.ok) { /* if the recaptcha is not valid, alert the user */
-            alert('ReCAPTCHA verification failed');
-            return;
-        }
+        // const reCaptchaResponse = await fetch('/reCaptchaValidation', reCAPTCHMsg) /* send the token to the server to validate it */
+        // console.log(reCaptchaResponse);
+        // if (!reCaptchaResponse.ok) { /* if the recaptcha is not valid, alert the user */
+        //     setMsgModal('ReCAPTCHA verification failed');/* if the response is not ok, alert the user */
+        //     handleShow();
+        //     return;
+        // }
 
         /* define the signUp request message */
         const requestMsg = {
@@ -78,14 +107,16 @@ const SignUp = () => {
 
         const response = await fetch('/signUp', requestMsg) /* send the data to the server to register the user */
         console.log(response);
-        if (!response.ok) { /* if the response is not ok, alert the user */
-            alert('Invalid Registration Details');
+        if (!response.ok) {
+            setMsgModal('Invalid Registration Details');/* if the response is not ok, alert the user */
+            handleShow();
             return;
         }
         const responseData = await response.json(); /* get the response data */
         console.log(responseData);
-        alert('Registered! Please login.') /* alert the user that the registration was successful */
-
+        /* alert the user that the registration was successful */
+        setMsgModal('Registered! Please login.');
+        handleShow();
         handleClickHome(); /* navigate to the home page */
     };
     
@@ -132,9 +163,10 @@ const SignUp = () => {
                                         </div>
                                     </div>
                                     <center className='margin-bottom-ReCAPTCHA'><ReCAPTCHA /* display the reCAPTCHA */
-                                        sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
-                                        ref={captchaRef}
-                                    /></center>
+                                        sitekey="6Le9migkAAAAAHAzyMzJLLRN5b4LZPYOsbqjzE4J"
+                                        onChange={onChangeRecap}
+                                        ref={captchaRef}/>
+                                    </center>
                                     <input type="submit" className="btn btn-primary btn-user btn-block" value={'Register Account'}></input> 
                                 </form>
                                 <hr/>
@@ -146,7 +178,18 @@ const SignUp = () => {
                     </div>
                 </div>
             </div>
-
+            <Modal show={showModal} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title className='msg-modal-title'>ALERT!</Modal.Title>
+                </Modal.Header>
+                <Modal.Body><p className='msg-modal'>{msgModal}</p></Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };

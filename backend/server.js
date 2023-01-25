@@ -132,6 +132,29 @@ app.post('/signUp', (req, res) => {
                         res.send("Invalid login parameters.")
                         return
                     }
+                    let transporter = nodemailer.createTransport({
+                        service: 'hotmail',
+                        auth: {
+                            user: 'yassmineMoran@hotmail.com',
+                            pass: 'ClientServer'
+                        },
+                        tls : { rejectUnauthorized: false }
+                    });
+        
+                    let mailOptions ={
+                        from:'yassmineMoran@hotmail.com',
+                        to: req.body.email,
+                        subject: 'Welcome',
+                        text: 'Hello,\nWelcome to our car service application'
+                    };
+        
+                    transporter.sendMail(mailOptions, function(err,info){
+                        if(err){
+                            console.log(err);
+                            return;
+                        }
+                        console.log("sent: "+info.response);
+                    })
 
                     // define the response message
                     const signUpMsg = {
@@ -271,11 +294,11 @@ app.post('/reCaptchaValidation', async (req, res) => {
 
     // Destructuring response token from request body
     const token = req.body.token;
-
+    
     await axios.post(
-        `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`
+        `https://www.google.com/recaptcha/api/siteverify?secret=6Le9migkAAAAADRLS4_Iyw4lBCtaWTYhXsYQJo84&response=${token}`
     );
-
+    console.log("after Post recap");
     if (res.status(200)) { // if the request is valid
         console.log('reCAPTCHA verification succeeded');
         const reCAPTCHAMsg = { // define the response message
@@ -293,7 +316,8 @@ app.post('/reCaptchaValidation', async (req, res) => {
     }else{ // if the request is invalid
         console.log('reCAPTCHA verification failed');
         res.status(400)
-        res.send("ReCAPTCHA verification failed")
+        // res.send("ReCAPTCHA verification failed", token)
+        res.send(token)
         return
     }
 })

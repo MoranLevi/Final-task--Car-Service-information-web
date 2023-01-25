@@ -8,14 +8,20 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './LogIn.css';
 
+
+import Popup from 'reactjs-popup';
+import { Modal, Button } from "react-bootstrap";
+
 /* LogIn Component */
 const LogIn = () => {
-
     const navigate = useNavigate(); /* define hook to navigate to other pages */
-    const [rememberMe, setRememberMe] = useState(0); /* define state for the remember me checkbox */
-    
+    const [rememberMe, setRememberMe] = useState(0);/* define state for the remember me checkbox */
+    const [showModal, setShow] = useState(false);/*define state for the modal box */
+    const [msgModal, setMsgModal] = useState('');/*define state for the message modal box */
+    const [reCAPTCHAValue, setReCAPTCHAValue] = useState(0);
     const captchaRef = useRef(null); /* define ref for the captcha */
-	
+
+
     useEffect(() => {
         /* check for a stored session in local storage */
         const storedSession = localStorage.getItem('session');
@@ -28,7 +34,17 @@ const LogIn = () => {
             }
         }
       }, []); // Only run this effect once
-
+      
+	/* function that close the modal and reset the message modal*/
+    const handleClose = () =>{
+         setShow(false);
+         setMsgModal('');
+    }
+	/* function that open the modal and displays it*/
+    const handleShow = () =>{
+		setShow(true);
+	}
+	
     /* function that navigates to the forgot password page */
     const handleClickForgotPassword = () => {
         navigate('/forgotPassword');
@@ -39,11 +55,17 @@ const LogIn = () => {
         navigate('/signUp');
     };
 
+
     /* function that navigates to the dashboard page */
+
     const handleClickDashboard = () => {
         navigate('/dashboard');
     };
     
+    const onChangeRecap=(value)=> {
+        setReCAPTCHAValue(value);
+    }
+
     /* define useForm for the logIn form */
     const { register, handleSubmit, formState: { errors }} = useForm({
         resolver: yupResolver(logInSchema), /* validate the form with the schema */
@@ -60,31 +82,43 @@ const LogIn = () => {
             navigate('/dashboard'); 
         }
 
+        if(reCAPTCHAValue===0){
+            setStatus("ReCAPTCHA verification failed");
+            setMsgModal('ReCAPTCHA verification failed')
+           handleShow()
+
+            return;
+        }
+        
         /* if the session is not stored */
 
         /* check if the recaptcha is valid */
-        const token = captchaRef.current.getValue();
-        captchaRef.current.reset();
+        // const token = captchaRef.current.getValue();
+        // captchaRef.current.reset();
 
         /* define the recaptch request message */
-        const reCAPTCHMsg = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(
-                {
-                    title:     'reCAPTCHA',
-                    token:     token
-                })
-        };
+        // const reCAPTCHMsg = {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify(
+        //         {
+        //             title:     'reCAPTCHA',
+        //             token:     token
+        //         })
+        // };
         
         console.log("requesting");
 
-        const reCaptchaResponse = await fetch('/reCaptchaValidation', reCAPTCHMsg) /* send the token to the server to validate it */
-        console.log(reCaptchaResponse);
-        if (!reCaptchaResponse.ok) {
-            alert('ReCAPTCHA verification failed'); /* if the recaptcha is not valid, alert the user */
-            return;
-        }
+        // const reCaptchaResponse = await fetch('/reCaptchaValidation', reCAPTCHMsg) /* send the token to the server to validate it */
+        // console.log(reCaptchaResponse);
+        // if (!reCaptchaResponse.ok) {
+        //     console.log("hhhhhhhhhhhhhhh",reCaptchaResponse)
+		// 	/* if the recaptcha is not valid, alert the user */
+        //    setMsgModal('ReCAPTCHA verification failed')
+        //    handleShow()
+
+        //     return;
+        // }
 
         /* define the logIn request message */
         const requestMsg = {
@@ -100,11 +134,14 @@ const LogIn = () => {
 
         console.log("requesting");
 
-        const response = await fetch('/logIn', requestMsg); /* send the request to the server */
 
-        if (!response.ok) { /* if the response is not ok, alert the user */
-            alert('Invalid Login Details');
-            localStorage.clear(); /* Clear the local storage */
+        const response = await fetch('/logIn', requestMsg);/* send the request to the server */
+        
+        if (!response.ok) {/* if the response is not ok, alert the user */
+            setMsgModal('Invalid Login Details');
+            handleShow();
+            localStorage.clear();/* Clear the local storage */
+
             return;
         }
         let responseData = await response.json(); /* retrieve the response data */
@@ -123,6 +160,7 @@ const LogIn = () => {
     };
     
     return (
+        
         <div className="container">
 
             <div className="row justify-content-center">
@@ -156,8 +194,10 @@ const LogIn = () => {
                                                 </div>
                                             </div>
                                             <center className='margin-bottom-ReCAPTCHA'><ReCAPTCHA /* ReCAPTCHA component */
-                                                sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+
+                                                sitekey="6Le9migkAAAAAHAzyMzJLLRN5b4LZPYOsbqjzE4J"
                                                 ref={captchaRef}
+                                                onChange={onChangeRecap}
                                             /></center>
                                             <input type="submit" className="btn btn-primary btn-user btn-block" value={'Login'}></input>
                                             <hr/>
@@ -178,6 +218,18 @@ const LogIn = () => {
                 </div>
 
             </div>
+            <Modal show={showModal} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title className='msg-modal-title'>ALERT!</Modal.Title>
+                </Modal.Header>
+                <Modal.Body><p className='msg-modal'>{msgModal}</p></Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    
+                </Modal.Footer>
+            </Modal>
     </div>
     );
 };

@@ -197,7 +197,6 @@ app.post('/forgotPassword', (req, res) => {
             }
             if (result.length == 0) { // check if the user doesn't exist
                 res.status(400)
-                console.log("125")
                 res.send("Email DOESN'T exists")
                 return
             }

@@ -177,7 +177,7 @@ app.post('/signUp', (req, res) => {
 })
 
 /* POST request to forgot password */
-app.post('/forgotPassword', (req, res) => {
+app.post('/forgotPassword', cors(), (req, res) => {
     console.log("POST Forgot")
 
     if (req.body.title !== "ForgotPassword") { // check if the request is valid

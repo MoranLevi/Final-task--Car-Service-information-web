@@ -3,12 +3,10 @@ import { useNavigate  } from 'react-router-dom';
 import { addNewcarServiceSchema } from 'Validations/FormsValidation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+import { Modal, Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './AddNewCarService.css';
 
-
-import Popup from 'reactjs-popup';
-import { Modal, Button } from "react-bootstrap";
 
 /* Add New Car Service Component
    A component that add new car service to the database */
@@ -59,7 +57,7 @@ const AddNewCarService = () => {
 
         console.log("requesting");
 
-        const response = await fetch('/addNewCarService', requestMsg) /* send the request to the server */ 
+        const response = await fetch('https://car-service-information-web-server.vercel.app/addNewCarService', requestMsg) /* send the request to the server */ 
         console.log(response);
         if (!response.ok) { /* if the response is not ok, alert the user */
             setMsgModal('Invalid Car Service Details');

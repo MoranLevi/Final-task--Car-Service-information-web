@@ -3,11 +3,9 @@ import { useNavigate  } from 'react-router-dom';
 import { editcarServiceSchema } from 'Validations/FormsValidation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+import { Modal, Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './EditCarService.css';
-
-import Popup from 'reactjs-popup';
-import { Modal, Button } from "react-bootstrap";
 
 /* Edit Car Service Component 
    A component that add edit car service in the database*/
@@ -67,7 +65,7 @@ const EditCarService = () => {
 
         console.log("requesting");
 
-        const response = await fetch('/editCarService', requestMsg) /* send the request to the server */
+        const response = await fetch('https://car-service-information-web-server.vercel.app/editCarService', requestMsg) /* send the request to the server */
         console.log(response);
         if (!response.ok) { /* if the response is not ok, alert the user */
             setMsgModal('Invalid Car Service Details');

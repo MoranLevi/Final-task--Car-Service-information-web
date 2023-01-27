@@ -3,14 +3,12 @@ import { useNavigate  } from 'react-router-dom';
 import { signUpSchema } from 'Validations/FormsValidation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+import { Modal, Button } from "react-bootstrap";
 import md5 from 'md5';
 import ReCAPTCHA from 'react-google-recaptcha';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './SignUp.css';
 import '../../css/sb-admin-2.css';
-
-import Popup from 'reactjs-popup';
-import { Modal, Button } from "react-bootstrap";
 
 /* SignUp Component */
 const SignUp = () => {
@@ -107,7 +105,7 @@ const SignUp = () => {
 
         console.log("requesting");
 
-        const response = await fetch('/signUp', requestMsg) /* send the data to the server to register the user */
+        const response = await fetch('https://car-service-information-web-server.vercel.app/signUp', requestMsg) /* send the data to the server to register the user */
         console.log(response);
         if (!response.ok) {
             setMsgModal('Invalid Registration Details');/* if the response is not ok, alert the user */

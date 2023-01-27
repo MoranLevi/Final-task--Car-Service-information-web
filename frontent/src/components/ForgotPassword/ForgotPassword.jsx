@@ -3,11 +3,9 @@ import { forgotPasswordSchema } from 'Validations/FormsValidation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useNavigate  } from 'react-router-dom';
+import { Modal, Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ForgotPassword.css';
-
-import Popup from 'reactjs-popup';
-import { Modal, Button } from "react-bootstrap";
 
 /* Forgot Password Component */
 const ForgotPassword = () => {
@@ -63,7 +61,7 @@ const ForgotPassword = () => {
         console.log("requesting");
 
         /* send the request to the server */
-        const response = await fetch('/forgotPassword', requestMsg)
+        const response = await fetch('https://car-service-information-web-server.vercel.app/forgotPassword', requestMsg)
         console.log(response);
         if (!response.ok) { /* if the response is not ok, alert the user */
             setMsgModal('Invalid Details');/* if the response is not ok, alert the user */

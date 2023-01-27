@@ -4,11 +4,9 @@ import {resetPasswordSchema } from 'Validations/FormsValidation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { Modal, Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ResetPassword.css';
-
-import Popup from 'reactjs-popup';
-import { Modal, Button } from "react-bootstrap";
 
 /* ResetPassword Component */
 const ResetPassword = () => {
@@ -59,7 +57,7 @@ const ResetPassword = () => {
         };
         console.log("requesting");
 
-        const response = await fetch('/resetPassword', requestMsg) /* send the data to the server */
+        const response = await fetch('https://car-service-information-web-server.vercel.app/resetPassword', requestMsg) /* send the data to the server */
         console.log(response);
         if (!response.ok) { /* if the response is not ok, alert the user */
             setMsgModal('Invalid Details.');

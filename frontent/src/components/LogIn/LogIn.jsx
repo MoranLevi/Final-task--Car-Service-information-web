@@ -3,14 +3,11 @@ import { logInSchema } from 'Validations/FormsValidation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useNavigate  } from 'react-router-dom';
+import { Modal, Button } from "react-bootstrap";
 import md5 from 'md5';
 import ReCAPTCHA from 'react-google-recaptcha';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './LogIn.css';
-
-
-import Popup from 'reactjs-popup';
-import { Modal, Button } from "react-bootstrap";
 
 /* LogIn Component */
 const LogIn = () => {
@@ -135,7 +132,7 @@ const LogIn = () => {
         console.log("requesting");
 
 
-        const response = await fetch('/logIn', requestMsg);/* send the request to the server */
+        const response = await fetch('https://car-service-information-web-server.vercel.app/logIn', requestMsg);/* send the request to the server */
         
         if (!response.ok) {/* if the response is not ok, alert the user */
             setMsgModal('Invalid Login Details');

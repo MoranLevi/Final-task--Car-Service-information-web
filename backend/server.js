@@ -120,7 +120,7 @@ app.post('/signUp', (req, res) => {
             let query = `INSERT INTO ${USERS_TABLE.name} VALUES ('${req.body.email}','${req.body.firstName}', '${req.body.lastName}', '${req.body.password}')`
             console.log(query)
             databaseConnection.query(query,
-                (err, result) => {
+                async (err, result) => {
                     if (err) { // check if there is an error
                         res.status(500)
                         res.send(err)
@@ -147,13 +147,15 @@ app.post('/signUp', (req, res) => {
                         subject: 'Welcome',
                         text: 'Hello,\nWelcome to our car service application'
                     };
-        
-                    transporter.sendMail(mailOptions, function(err,info){
-                        if(err){
-                            console.log(err);
-                            return;
-                        }
-                        console.log("sent: "+info.response);
+                    
+                    await new Promise((resolve, reject) => {
+                        transporter.sendMail(mailOptions, function(err,info){
+                            if(err){
+                                console.log(err);
+                                return;
+                            }
+                            console.log("sent: "+info.response);
+                        })
                     })
 
                     // define the response message
@@ -186,7 +188,7 @@ app.post('/forgotPassword', (req, res) => {
     /* Check if user already exist */
     const query = `SELECT * FROM ${USERS_TABLE.name} WHERE ${USERS_TABLE.columns.email} = ?`
     databaseConnection.query(query, [req.body.email],
-        (err, result) => {
+        async (err, result) => {
             if (err) { // check if there is an error
                 res.status(500)
                 res.send(err)
@@ -217,13 +219,15 @@ app.post('/forgotPassword', (req, res) => {
                 text: 'Hello,\nEnter the following link to reset password:\nhttp://localhost:3000/#/resetPassword'
             };
 
-            // send the email
-            transporter.sendMail(mailOptions, function(err,info){
-                if(err){
-                    console.log(err);
-                    return;
-                }
-                console.log("sent: "+info.response);
+            await new Promise((resolve, reject) => {
+                // send the email
+                transporter.sendMail(mailOptions, function(err,info){
+                    if(err){
+                        console.log(err);
+                        return;
+                    }
+                    console.log("sent: "+info.response);
+                })
             })
 
             // define the response message
@@ -283,44 +287,44 @@ app.post('/resetPassword', (req, res) => {
 })
 
 /* POST request to reCAPTCHA */
-app.post('/reCaptchaValidation', async (req, res) => {
-    console.log("POST reCAPTCHA")
+// app.post('/reCaptchaValidation', async (req, res) => {
+//     console.log("POST reCAPTCHA")
 
-    if (req.body.title !== "reCAPTCHA") { // check if the request is valid
-        res.status(400)
-        res.send("Bad Login Request.")
-        return
-    }
+//     if (req.body.title !== "reCAPTCHA") { // check if the request is valid
+//         res.status(400)
+//         res.send("Bad Login Request.")
+//         return
+//     }
 
-    // Destructuring response token from request body
-    const token = req.body.token;
+//     // Destructuring response token from request body
+//     const token = req.body.token;
     
-    await axios.post(
-        `https://www.google.com/recaptcha/api/siteverify?secret=6Le9migkAAAAADRLS4_Iyw4lBCtaWTYhXsYQJo84&response=${token}`
-    );
-    console.log("after Post recap");
-    if (res.status(200)) { // if the request is valid
-        console.log('reCAPTCHA verification succeeded');
-        const reCAPTCHAMsg = { // define the response message
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(
-            {
-                title: 'reCAPTCHA',
-                signUpResult: 'OK',
-            })
-        }
-        res.type('application/json')
-        res.send(reCAPTCHAMsg) // send the response
-        return
-    }else{ // if the request is invalid
-        console.log('reCAPTCHA verification failed');
-        res.status(400)
-        // res.send("ReCAPTCHA verification failed", token)
-        res.send(token)
-        return
-    }
-})
+//     await axios.post(
+//         `https://www.google.com/recaptcha/api/siteverify?secret=6Le9migkAAAAADRLS4_Iyw4lBCtaWTYhXsYQJo84&response=${token}`
+//     );
+//     console.log("after Post recap");
+//     if (res.status(200)) { // if the request is valid
+//         console.log('reCAPTCHA verification succeeded');
+//         const reCAPTCHAMsg = { // define the response message
+//         method: 'GET',
+//         headers: {'Content-Type': 'application/json'},
+//         body: JSON.stringify(
+//             {
+//                 title: 'reCAPTCHA',
+//                 signUpResult: 'OK',
+//             })
+//         }
+//         res.type('application/json')
+//         res.send(reCAPTCHAMsg) // send the response
+//         return
+//     }else{ // if the request is invalid
+//         console.log('reCAPTCHA verification failed');
+//         res.status(400)
+//         // res.send("ReCAPTCHA verification failed", token)
+//         res.send(token)
+//         return
+//     }
+// })
 
 /* GET request to cars data */
 app.get('/getCarsData', (req, res) => {

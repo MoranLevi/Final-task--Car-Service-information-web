@@ -10,6 +10,7 @@ const port =  process.env.PORT || 8000 // Port to listen on
 
 app.use(express.json());
 app.use(cors()); 
+app.options('*', cors())
 
 // Define object with db config data
 const db_config = {
@@ -176,7 +177,7 @@ app.post('/signUp', (req, res) => {
 })
 
 /* POST request to forgot password */
-app.post('/forgotPassword', (req, res) => {
+app.post('/forgotPassword', cors(), (req, res) => {
     console.log("POST Forgot")
 
     if (req.body.title !== "ForgotPassword") { // check if the request is valid

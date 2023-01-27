@@ -158,6 +158,10 @@ app.post('/signUp', (req, res) => {
                         })
                     })
 
+                    const headers = {'Content-Type':'application/json',
+                                    'Access-Control-Allow-Origin':'*',
+                                    'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}
+
                     // define the response message
                     const signUpMsg = {
                         method: 'GET',
@@ -165,10 +169,10 @@ app.post('/signUp', (req, res) => {
                         body: JSON.stringify(
                             {
                                 title: 'signUp',
+                                headers:headers,
                                 signUpResult: 'OK',
                             })
                     }
-                    res.header('Access-Control-Allow-Origin', '*')
                     res.type('application/json')
                     res.send(signUpMsg) // send the response
                 })

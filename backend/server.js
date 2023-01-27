@@ -133,7 +133,7 @@ app.post('/signUp', (req, res) => {
                         return
                     }
                     
-                    return new Promise((resolve, reject) => {
+                    // return new Promise((resolve, reject) => {
                         let transporter = nodemailer.createTransport({
                             service: 'hotmail',
                             auth: {
@@ -174,7 +174,6 @@ app.post('/signUp', (req, res) => {
                     })
                 })
         })
-})
 
 /* POST request to forgot password */
 app.post('/forgotPassword', (req, res) => {
@@ -190,6 +189,7 @@ app.post('/forgotPassword', (req, res) => {
     const query = `SELECT * FROM ${USERS_TABLE.name} WHERE ${USERS_TABLE.columns.email} = ?`
     databaseConnection.query(query, [req.body.email],
         async (err, result) => {
+            res.header('Access-Control-Allow-Origin', '*')
             if (err) { // check if there is an error
                 res.status(500)
                 res.send(err)
@@ -238,7 +238,6 @@ app.post('/forgotPassword', (req, res) => {
                                 signUpResult: 'OK',
                             })
                         }
-
                         res.type('application/json')
                         res.send(forgotPasswordMsg) // send the response
                     }

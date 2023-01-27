@@ -10,7 +10,7 @@ const port =  process.env.PORT || 8000 // Port to listen on
 
 app.use(express.json());
 app.use(cors()); 
-app.options('*', cors())
+app.options('/forgotPassword', cors())
 
 // Define object with db config data
 const db_config = {

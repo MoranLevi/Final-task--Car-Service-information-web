@@ -148,15 +148,27 @@ app.post('/signUp', (req, res) => {
                         text: 'Hello,\nWelcome to our car service application'
                     };
                     
-                    await new Promise((resolve, reject) => {
-                        transporter.sendMail(mailOptions, function(err,info){
+                    // await new Promise((resolve, reject) => {
+                    //     transporter.sendMail(mailOptions, function(err,info){
+                    //         if(err){
+                    //             console.log(err);
+                    //             return;
+                    //         }
+                    //         console.log("sent: "+info.response);
+                    //     })
+                    // })
+
+                    const sendMessage = async()=>{
+                        await transporter.sendMail(mailOptions, function(err,info){
                             if(err){
                                 console.log(err);
                                 return;
                             }
                             console.log("sent: "+info.response);
                         })
-                    })
+                    }
+
+                    await sendMessage()
 
                     const headers = {'Content-Type':'application/json',
                                     'Access-Control-Allow-Origin':'*',
@@ -223,16 +235,28 @@ app.post('/forgotPassword', (req, res) => {
                 text: 'Hello,\nEnter the following link to reset password:\nhttps://car-service-information-web-server.vercel.app/#/resetPassword'
             };
 
-            await new Promise((resolve, reject) => {
-                // send the email
+            // await new Promise((resolve, reject) => {
+            //     // send the email
+            //     transporter.sendMail(mailOptions, function(err,info){
+            //         if(err){
+            //             console.log(err);
+            //             return;
+            //         }
+            //         console.log("sent: "+info.response);
+            //     })
+            // })
+
+            const sendMessage = async()=>{
                 transporter.sendMail(mailOptions, function(err,info){
-                    if(err){
-                        console.log(err);
-                        return;
-                    }
-                    console.log("sent: "+info.response);
-                })
-            })
+                        if(err){
+                            console.log(err);
+                            return;
+                        }
+                        console.log("sent: "+info.response);
+                    })
+            }
+
+            await sendMessage()
 
             // define the response message
             const forgotPasswordMsg = {

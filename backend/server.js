@@ -9,8 +9,7 @@ const app = express() // Create express app
 const port =  process.env.PORT || 8000 // Port to listen on
 
 app.use(express.json());
-app.use(cors()); 
-app.options('/forgotPassword', cors())
+app.use(cors());
 
 // Define object with db config data
 const db_config = {
@@ -178,7 +177,7 @@ app.post('/signUp', (req, res) => {
 })
 
 /* POST request to forgot password */
-app.post('/forgotPassword', cors(), (req, res) => {
+app.post('/forgotPassword', (req, res) => {
     console.log("POST Forgot")
 
     if (req.body.title !== "ForgotPassword") { // check if the request is valid
@@ -220,7 +219,7 @@ app.post('/forgotPassword', cors(), (req, res) => {
                     subject: 'Reset Password',
                     text: 'Hello,\nEnter the following link to reset password:\nhttps://car-service-information-web-server.vercel.app/#/resetPassword'
                 };
-                
+
                 // send the email
                 transporter.sendMail(mailOptions, function(err,info){
                     if(err){

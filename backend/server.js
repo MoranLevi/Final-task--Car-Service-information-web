@@ -148,45 +148,29 @@ app.post('/signUp', (req, res) => {
                         text: 'Hello,\nWelcome to our car service application'
                     };
                     
-                    // await new Promise((resolve, reject) => {
-                    //     transporter.sendMail(mailOptions, function(err,info){
-                    //         if(err){
-                    //             console.log(err);
-                    //             return;
-                    //         }
-                    //         console.log("sent: "+info.response);
-                    //     })
-                    // })
-
-                    const sendMessage = async()=>{
-                        await transporter.sendMail(mailOptions, function(err,info){
+                    return new Promise((resolve, reject) => {
+                        transporter.sendMail(mailOptions, function(err,info){
                             if(err){
-                                console.log(err);
+                                res.status(500)
+                                res.send(err)
                                 return;
                             }
-                            console.log("sent: "+info.response);
+                            else {
+                                // define the response message
+                                const signUpMsg = {
+                                    method: 'GET',
+                                    headers: {'Content-Type': 'application/json'},
+                                    body: JSON.stringify(
+                                        {
+                                            title: 'signUp',
+                                            signUpResult: 'OK',
+                                        })
+                                }
+                                res.type('application/json')
+                                res.send(signUpMsg) // send the response
+                            }
                         })
-                    }
-
-                    await sendMessage()
-
-                    const headers = {'Content-Type':'application/json',
-                                    'Access-Control-Allow-Origin':'*',
-                                    'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}
-
-                    // define the response message
-                    const signUpMsg = {
-                        method: 'GET',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify(
-                            {
-                                title: 'signUp',
-                                headers:headers,
-                                signUpResult: 'OK',
-                            })
-                    }
-                    res.type('application/json')
-                    res.send(signUpMsg) // send the response
+                    })
                 })
         })
 })
@@ -239,7 +223,6 @@ app.post('/forgotPassword', (req, res) => {
                 // send the email
                 transporter.sendMail(mailOptions, function(err,info){
                     if(err){
-                        console.log(err);
                         res.status(500)
                         res.send(err)
                         return;
@@ -259,7 +242,6 @@ app.post('/forgotPassword', (req, res) => {
                         res.type('application/json')
                         res.send(forgotPasswordMsg) // send the response
                     }
-                    // console.log("sent: "+info.response);
                 })
             })
         })

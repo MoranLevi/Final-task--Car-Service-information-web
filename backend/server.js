@@ -133,23 +133,24 @@ app.post('/signUp', (req, res) => {
                         res.send("Invalid login parameters.")
                         return
                     }
-                    let transporter = nodemailer.createTransport({
-                        service: 'hotmail',
-                        auth: {
-                            user: 'yassmineMoran@hotmail.com',
-                            pass: 'ClientServer'
-                        },
-                        tls : { rejectUnauthorized: false }
-                    });
-        
-                    let mailOptions ={
-                        from:'yassmineMoran@hotmail.com',
-                        to: req.body.email,
-                        subject: 'Welcome',
-                        text: 'Hello,\nWelcome to our car service application'
-                    };
                     
                     return new Promise((resolve, reject) => {
+                        let transporter = nodemailer.createTransport({
+                            service: 'hotmail',
+                            auth: {
+                                user: 'yassmineMoran@hotmail.com',
+                                pass: 'ClientServer'
+                            },
+                            tls : { rejectUnauthorized: false }
+                        });
+            
+                        let mailOptions ={
+                            from:'yassmineMoran@hotmail.com',
+                            to: req.body.email,
+                            subject: 'Welcome',
+                            text: 'Hello,\nWelcome to our car service application'
+                        };
+
                         transporter.sendMail(mailOptions, function(err,info){
                             if(err){
                                 res.status(500)
@@ -201,25 +202,25 @@ app.post('/forgotPassword', cors(), (req, res) => {
                 return
             }
 
-            // create transport for the email
-            let transporter = nodemailer.createTransport({
-                service: 'hotmail',
-                auth: {
-                    user: 'yassmineMoran@hotmail.com',
-                    pass: 'ClientServer'
-                },
-                tls : { rejectUnauthorized: false }
-            });
-
-            // define the email
-            let mailOptions ={
-                from:'yassmineMoran@hotmail.com',
-                to: req.body.email,
-                subject: 'Reset Password',
-                text: 'Hello,\nEnter the following link to reset password:\nhttps://car-service-information-web-server.vercel.app/#/resetPassword'
-            };
-
             return new Promise((resolve, reject) => {
+                // create transport for the email
+                let transporter = nodemailer.createTransport({
+                    service: 'hotmail',
+                    auth: {
+                        user: 'yassmineMoran@hotmail.com',
+                        pass: 'ClientServer'
+                    },
+                    tls : { rejectUnauthorized: false }
+                });
+
+                // define the email
+                let mailOptions ={
+                    from:'yassmineMoran@hotmail.com',
+                    to: req.body.email,
+                    subject: 'Reset Password',
+                    text: 'Hello,\nEnter the following link to reset password:\nhttps://car-service-information-web-server.vercel.app/#/resetPassword'
+                };
+                
                 // send the email
                 transporter.sendMail(mailOptions, function(err,info){
                     if(err){

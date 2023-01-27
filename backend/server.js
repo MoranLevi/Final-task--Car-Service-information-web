@@ -168,7 +168,7 @@ app.post('/signUp', (req, res) => {
                                 signUpResult: 'OK',
                             })
                     }
-
+                    res.header('Access-Control-Allow-Origin', '*')
                     res.type('application/json')
                     res.send(signUpMsg) // send the response
                 })

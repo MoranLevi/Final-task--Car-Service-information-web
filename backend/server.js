@@ -235,28 +235,16 @@ app.post('/forgotPassword', (req, res) => {
                 text: 'Hello,\nEnter the following link to reset password:\nhttps://car-service-information-web-server.vercel.app/#/resetPassword'
             };
 
-            // await new Promise((resolve, reject) => {
-            //     // send the email
-            //     transporter.sendMail(mailOptions, function(err,info){
-            //         if(err){
-            //             console.log(err);
-            //             return;
-            //         }
-            //         console.log("sent: "+info.response);
-            //     })
-            // })
-
-            const sendMessage = async()=>{
+            await new Promise((resolve, reject) => {
+                // send the email
                 transporter.sendMail(mailOptions, function(err,info){
-                        if(err){
-                            console.log(err);
-                            return;
-                        }
-                        console.log("sent: "+info.response);
-                    })
-            }
-
-            await sendMessage()
+                    if(err){
+                        console.log(err);
+                        return;
+                    }
+                    console.log("sent: "+info.response);
+                })
+            })
 
             // define the response message
             const forgotPasswordMsg = {

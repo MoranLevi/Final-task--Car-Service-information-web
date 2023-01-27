@@ -1,4 +1,6 @@
 {
+  "proxy": "https://car-service-information-web-server.vercel.app",
+  "withCredentials": true,
   "name": "my-app",
   "version": "0.1.0",
   "private": true,

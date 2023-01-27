@@ -72,6 +72,7 @@ const ForgotPassword = () => {
         const responseData = await response.json();
         // console.log(responseData);
         console.log("hhh", responseData);
+        alert(responseData.msg)
         setMsgModal('Sent! Check your mail.');/* if the response is not ok, alert the user */
         handleShow();
         handleClickHome();
